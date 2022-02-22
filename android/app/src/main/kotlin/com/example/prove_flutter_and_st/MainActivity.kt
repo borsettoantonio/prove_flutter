@@ -1,4 +1,4 @@
-package com.example.flutter_app_5
+package com.example.prove_flutter_and_st
 
 import io.flutter.embedding.android.FlutterActivity
 

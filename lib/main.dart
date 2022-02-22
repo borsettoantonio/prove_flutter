@@ -1,116 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'repository.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  static const String _title = 'Flutter Code Sample';
-
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyTabbedPage(),
-    );
+    return ChangeNotifierProvider(
+        create: (_) => Repository(),
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        ));
   }
 }
 
-class MyTabbedPage extends StatefulWidget {
-  const MyTabbedPage({Key? key}) : super(key: key);
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
   @override
-  State<MyTabbedPage> createState() => _MyTabbedPageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyTabbedPageState extends State<MyTabbedPage>
-    with SingleTickerProviderStateMixin {
-  static const List<Tab> myTabs = <Tab>[
-    Tab(text: 'LEFT'),
-    Tab(text: 'RIGHT', icon: Icon(Icons.directions_car)),
-  ];
-
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(vsync: this, length: myTabs.length);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  void _openMyPage() {
-    Navigator.push<void>(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => const TabBarDemo(),
-      ),
-    );
-  }
-
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: myTabs,
-        ),
+        title: Text(widget.title),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: myTabs.map((Tab tab) {
-          final String label = tab.text!.toLowerCase();
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                'This is the $label tab',
-                style: const TextStyle(fontSize: 36),
-              ),
-              ElevatedButton(
-                  onPressed: _openMyPage, child: const Text('Nuova pagina'))
-            ],
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
-class TabBarDemo extends StatelessWidget {
-  const TabBarDemo({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.directions_car)),
-                Tab(icon: Icon(Icons.directions_transit)),
-                Tab(icon: Icon(Icons.directions_bike)),
-              ],
-            ),
-            title: const Text('Tabs Demo'),
-          ),
-          body: const TabBarView(
-            children: [
-              Icon(Icons.directions_car),
-              Icon(Icons.directions_transit),
-              Center(child: Text('ciao tab')),
-            ],
-          ),
-        ),
-      ),
+      body: Center(child: Consumer<Repository>(
+        builder: (context, repo, child) {
+          final dati = repo.getDati();
+          String numeri = '';
+          for (int x in dati) {
+            numeri = numeri + (x.toString() + '_ ');
+          }
+          return Text(numeri);
+        },
+      )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final repo = Provider.of<Repository>(context, listen: false);
+          if (repo.getStato() == 0) {
+            repo.lanciaThread();
+          } else {
+            repo.fermaThread();
+          }
+          repo.cambiaStato();
+        },
+        tooltip: 'Increment',
+        child: Consumer<Repository>(builder: (context, repo, child) {
+          return repo.getStato() == 0
+              ? const Icon(Icons.add)
+              : const Icon(Icons.remove);
+        }),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
