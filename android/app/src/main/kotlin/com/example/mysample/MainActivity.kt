@@ -1,4 +1,4 @@
-package com.example.prove_flutter_and_st
+package com.example.mysample
 
 import io.flutter.embedding.android.FlutterActivity
 

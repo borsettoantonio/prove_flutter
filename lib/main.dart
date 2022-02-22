@@ -1,72 +1,137 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'repository.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  static const String _title = 'Custom List Item';
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => Repository(),
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        ));
+    return MaterialApp(
+      title: _title,
+      home: Scaffold(
+        appBar: AppBar(title: const Text(_title)),
+        body: const MyStatelessWidget(),
+      ),
+    );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class CustomListItem extends StatelessWidget {
+  const CustomListItem({
+    Key? key,
+    required this.thumbnail,
+    required this.title,
+    required this.user,
+    required this.viewCount,
+  }) : super(key: key);
 
+  final Widget thumbnail;
   final String title;
+  final String user;
+  final int viewCount;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: thumbnail,
+          ),
+          Expanded(
+            flex: 3,
+            child: _VideoDescription(
+              title: title,
+              user: user,
+              viewCount: viewCount,
+            ),
+          ),
+          const Icon(
+            Icons.more_vert,
+            size: 20.0,
+          ),
+        ],
       ),
-      body: Center(child: Consumer<Repository>(
-        builder: (context, repo, child) {
-          final dati = repo.getDati();
-          String numeri = '';
-          for (int x in dati) {
-            numeri = numeri + (x.toString() + '_ ');
-          }
-          return Text(numeri);
-        },
-      )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final repo = Provider.of<Repository>(context, listen: false);
-          if (repo.getStato() == 0) {
-            repo.lanciaThread();
-          } else {
-            repo.fermaThread();
-          }
-          repo.cambiaStato();
-        },
-        tooltip: 'Increment',
-        child: Consumer<Repository>(builder: (context, repo, child) {
-          return repo.getStato() == 0
-              ? const Icon(Icons.add)
-              : const Icon(Icons.remove);
-        }),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class _VideoDescription extends StatelessWidget {
+  const _VideoDescription({
+    Key? key,
+    required this.title,
+    required this.user,
+    required this.viewCount,
+  }) : super(key: key);
+
+  final String title;
+  final String user;
+  final int viewCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14.0,
+            ),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
+          Text(
+            user,
+            style: const TextStyle(fontSize: 10.0),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
+          Text(
+            '$viewCount views',
+            style: const TextStyle(fontSize: 10.0),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MyStatelessWidget extends StatelessWidget {
+  const MyStatelessWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(8.0),
+      itemExtent:230.0,
+      children: <CustomListItem>[
+        CustomListItem(
+          user: 'Flutter',
+          viewCount: 999000,
+          thumbnail: Container(
+            child: Image.asset('image/montagna.jpg')
+          ),
+          title: 'The Flutter YouTube Channel',
+        ),
+        CustomListItem(
+          user: 'Dash',
+          viewCount: 884000,
+          //thumbnail: Container(
+            //decoration: const BoxDecoration(color: Colors.yellow),
+          thumbnail: Container(
+              child: Image.asset('image/noi.jpg')
+          ),
+          title: 'Announcing Flutter 1.0',
+        ),
+      ],
     );
   }
 }

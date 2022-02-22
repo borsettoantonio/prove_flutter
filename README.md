@@ -1,3 +1,5 @@
-# prove_flutter_and_st
+# listTile
 
-Prova di uso degli isolate con comunicazione bidirezionale tra i due thread
+Un esempio di elementi custom di una lista
+tratto da: https://api.flutter.dev/flutter/material/ListTile-class.html
+con qualche modifica
