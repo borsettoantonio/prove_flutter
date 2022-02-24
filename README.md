@@ -1,5 +1,9 @@
-# listTile
+# WordPair Generator
 
-Un esempio di elementi custom di una lista
-tratto da: https://api.flutter.dev/flutter/material/ListTile-class.html
-con qualche modifica
+Flutter crash course project based on the documentation project
+
+Generate random word pairs and add pairs to favorites
+
+https://www.youtube.com/watch?v=1gDhl4leEzA
+Tratto da un video di youtube
+Mostra l'uso della ListView
