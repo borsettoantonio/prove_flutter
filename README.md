@@ -1,9 +1,10 @@
-# WordPair Generator
+# flutter_succintly
 
-Flutter crash course project based on the documentation project
+21.04.2022
 
-Generate random word pairs and add pairs to favorites
-
-https://www.youtube.com/watch?v=1gDhl4leEzA
-Tratto da un video di youtube
-Mostra l'uso della ListView
+Demo dal libro Flutter Succintly riveduta e corretta.
+caratteristiche principali:
+- accesso a database sqlite
+- vasto uso di metodi asincroni
+- uso di Form per raccolta e validazione dei dati
+- uso di liste di visualizzazione

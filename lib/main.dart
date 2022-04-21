@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
-import './random_words.dart';
+import './ui/doclist.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const DocExpiryApp());
 
-class MyApp extends StatelessWidget {
+class DocExpiryApp extends StatelessWidget {
+  const DocExpiryApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(primaryColor: Colors.purple[900]),
-        home: RandomWords());
+      debugShowCheckedModeBanner: false,
+      title: 'DocExpire',
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      home: const DocList(),
+    );
   }
 }
