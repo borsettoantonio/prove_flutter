@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_succintly">
+    package="com.example.asincrono">
    <application
-        android:label="flutter_succintly"
+        android:label="asincrono"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

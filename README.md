@@ -1,10 +1,8 @@
-# flutter_succintly
+# asincrono
 
-21.04.2022
-
-Demo dal libro Flutter Succintly riveduta e corretta.
-caratteristiche principali:
-- accesso a database sqlite
-- vasto uso di metodi asincroni
-- uso di Form per raccolta e validazione dei dati
-- uso di liste di visualizzazione
+Esempio di come richiamare una metodo asincrono nella costruzione di 
+una finestra.
+Il metodo asincrono carica i dati in una variabile globale della finestra.
+Quando viene invocato si deve porre a true una variabile isLoading,
+che verrà posta a false alla fine del metodo asincrono dentro un setState in modo da triggerare la rebuild della finestra.
+La visualizzazione dei dati sarà poi condizionata dalla variabile isLoading.
