@@ -1,4 +1,4 @@
-package com.example.asincrono
+package com.example.wordpair_generator_master
 
 import io.flutter.embedding.android.FlutterActivity
 

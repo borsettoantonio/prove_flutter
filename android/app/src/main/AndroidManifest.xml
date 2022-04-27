@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.asincrono">
+    package="com.example.wordpair_generator_master">
    <application
-        android:label="asincrono"
+        android:label="wordpair_generator_master"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

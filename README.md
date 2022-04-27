@@ -1,8 +1,14 @@
-# asincrono
+# WordPair Generator
 
-Esempio di come richiamare una metodo asincrono nella costruzione di 
-una finestra.
-Il metodo asincrono carica i dati in una variabile globale della finestra.
-Quando viene invocato si deve porre a true una variabile isLoading,
-che verrà posta a false alla fine del metodo asincrono dentro un setState in modo da triggerare la rebuild della finestra.
-La visualizzazione dei dati sarà poi condizionata dalla variabile isLoading.
+Flutter crash course project based on the documentation project
+
+Generate random word pairs and add pairs to favorites
+
+https://www.youtube.com/watch?v=1gDhl4leEzA
+Tratto da un video di youtube
+Mostra l'uso della ListView.
+
+In questa versione ho diviso l'interfaccia in più widgets,
+e ho provato le modalità per passare i dati dentro ai widget,
+e ritornare i dati dai widget.
+Il tutto serve a limitare i widget statefull
