@@ -1,4 +1,4 @@
-package com.example.wordpair_generator_master
+package com.example.statefulwidget_lifecycle_example
 
 import io.flutter.embedding.android.FlutterActivity
 

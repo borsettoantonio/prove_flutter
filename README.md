@@ -1,14 +1,11 @@
-# WordPair Generator
+# Flutter Tutorial - Stateful Widget Lifecycle
+Esempio tratto da youtube: https://www.youtube.com/watch?v=FL_U8ORv-2Q 
+con github: https://github.com/JohannesMilke/statefulwidget_lifecycle_example
 
-Flutter crash course project based on the documentation project
+mostra l'uso di didUpdateWidget() quando viene ricreato un widget statefull:
+la creazione provoca una nuova assegnazione alle proprietà final del widget
+mentre lo stato che è contenuto dello State<widget> non viene modificato.
 
-Generate random word pairs and add pairs to favorites
-
-https://www.youtube.com/watch?v=1gDhl4leEzA
-Tratto da un video di youtube
-Mostra l'uso della ListView.
-
-In questa versione ho diviso l'interfaccia in più widgets,
-e ho provato le modalità per passare i dati dentro ai widget,
-e ritornare i dati dai widget.
-Il tutto serve a limitare i widget statefull
+Si vede anche che nella listview quando un elemento esce dal video viene distrutto
+del tutto e ricreato quando si ripresenta sul video.
+Questo fa perdere lo stato dell'elemento.
