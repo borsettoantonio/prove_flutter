@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:statefulwidget_lifecycle_example/page/first_page.dart';
+import './ui/doclist.dart';
 
-Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+void main() => runApp(const DocExpiryApp());
 
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  static final String title = 'Stateful Widget Lifecycle';
+class DocExpiryApp extends StatelessWidget {
+  const DocExpiryApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: title,
-        theme: ThemeData(primarySwatch: Colors.deepOrange),
-        home: FirstPage(),
-      );
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'DocExpire',
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      home: const DocList(),
+    );
+  }
 }

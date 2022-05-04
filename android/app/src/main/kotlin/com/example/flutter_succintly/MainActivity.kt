@@ -1,4 +1,4 @@
-package com.example.statefulwidget_lifecycle_example
+package com.example.flutter_succintly
 
 import io.flutter.embedding.android.FlutterActivity
 
