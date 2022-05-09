@@ -1,10 +1,11 @@
-# flutter_succintly
+# Flutter Tutorial - Stateful Widget Lifecycle vers.2
 
-21.04.2022
+Ho modificato l'esempio con lo stesso titolo per inserire il mantenimento
+dello stato negli elementi della listview che vengono cancellati perchè
+non più sul video.
 
-Demo dal libro Flutter Succintly riveduta e corretta.
-caratteristiche principali:
-- accesso a database sqlite
-- vasto uso di metodi asincroni
-- uso di Form per raccolta e validazione dei dati
-- uso di liste di visualizzazione
+Su first_page.dart ci sono due versini della listview:
+la prima non mantiene lo stato dei widget che vanno fuori schermo
+perchè i widget non vengono ricreati a partire dal metodo lista.map(..)
+la seconda invece mantiene lo stato e quando serve viene richiamato
+il metodo itemBuilder.
