@@ -1,5 +1,4 @@
-# Corso Flutter & Dart Lezione 04 - 26
-17.05.2022
-
+# Corso Flutter & Dart Lezione 04 - 37
 Programma demo del corso 
-Uso della funzione showModalBottomSheet
+Creazione delle Chart Bars
+con modifica per far crescere il livello della barra dal basso
