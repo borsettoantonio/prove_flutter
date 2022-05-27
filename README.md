@@ -1,4 +1,4 @@
-# Corso Flutter & Dart Lezione 04 - 37
+# Corso Flutter & Dart Lezione 04 Finale
 Programma demo del corso 
-Creazione delle Chart Bars
-con modifica per far crescere il livello della barra dal basso
+Inserimento della data di una transazione
+Cancellazione di una transazione

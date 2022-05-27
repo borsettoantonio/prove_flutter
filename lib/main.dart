@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './widgets/chart.dart';
 import './models/transaction.dart';
-//import 'package:flutter/src/material/color_scheme.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() => runApp(const MyApp());
+void main()
+// initializeDateFormatting('it_IT', null).then((_) => runApp(const MyApp()));
+{
+  Intl.defaultLocale = 'it_IT';
+  initializeDateFormatting('it_IT', null).then((_) => runApp(const MyApp()));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -14,9 +20,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Personal Expenses',
       theme: ThemeData(
-          //primarySwatch: Colors.purple,
           colorScheme: ColorScheme.fromSwatch(
             accentColor: Colors.amber,
             primarySwatch: Colors.purple,
@@ -28,6 +34,7 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
+                button: const TextStyle(color: Colors.white),
               ),
           appBarTheme: AppBarTheme(
             toolbarTextStyle: ThemeData.light()
@@ -40,6 +47,7 @@ class MyApp extends StatelessWidget {
                   ),
                 )
                 .bodyText2,
+            foregroundColor: Colors.white,
             titleTextStyle: ThemeData.light()
                 .textTheme
                 .copyWith(
@@ -71,14 +79,24 @@ class _MyHomePageState extends State<MyHomePage> {
       amount: 99.99,
       date: DateTime.parse('2022-05-21'),
     ),
-    /*
     Transaction(
       id: 't2',
       title: 'Weekly Groceries',
       amount: 16.53,
       date: DateTime.now(),
     ),
-    */
+    Transaction(
+      id: 't3',
+      title: 'scarpe',
+      amount: 16.53,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't4',
+      title: 'pantalone',
+      amount: 16.53,
+      date: DateTime.now(),
+    ),
   ];
 
   List<Transaction> get _recentTransactions {
@@ -91,11 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: chosenDate,
       id: DateTime.now().toString(),
     );
 
@@ -117,14 +136,24 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    var x = Theme.of(context).appBarTheme.foregroundColor;
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Theme.of(context).colorScheme.primary,
         title: const Text('Controllo spesa'),
         actions: <Widget>[
           IconButton(
+            color: Theme.of(context)
+                .appBarTheme
+                .foregroundColor, //Colors.white, //
             icon: const Icon(Icons.add),
             onPressed: () => _startAddNewTransaction(context),
           ),
@@ -135,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_userTransactions),
+            TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
       ),
