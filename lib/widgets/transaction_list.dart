@@ -61,10 +61,21 @@ class TransactionList extends StatelessWidget {
                           ),
                         ),
                       ),
-                      title: Text(
-                        transactions[index].title,
-                        style: Theme.of(context).textTheme.headline6,
+                      title:
+                          // SizedBox(
+                          //   width: 250,
+                          //   height: 20,
+                          //   child:
+                          FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          transactions[index].title,
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
                       ),
+                      //),
+
                       subtitle: Text(
                         DateFormat.yMMMd().format(transactions[index].date),
                         style: const TextStyle(
