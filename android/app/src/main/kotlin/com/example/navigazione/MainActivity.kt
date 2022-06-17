@@ -1,4 +1,4 @@
-package com.example.pro8
+package com.example.navigazione
 
 import io.flutter.embedding.android.FlutterActivity
 
