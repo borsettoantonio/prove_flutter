@@ -53,7 +53,7 @@ class MealDetailScreen extends StatelessWidget {
             buildContainer(
               ListView.builder(
                 itemBuilder: (ctx, index) => Card(
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).primaryColorDark,
                   child: Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: 5,
