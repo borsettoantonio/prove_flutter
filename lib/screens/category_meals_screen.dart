@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/meal_item.dart';
-import '../dummy_data.dart';
 import '../models/meal.dart';
 
 class CategoryMealsScreen extends StatefulWidget {
@@ -40,12 +39,6 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
     super.didChangeDependencies();
   }
 
-  void _removeMeal(String mealId) {
-    setState(() {
-      displayedMeals.removeWhere((meal) => meal.id == mealId);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +54,6 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
             duration: displayedMeals[index].duration,
             affordability: displayedMeals[index].affordability,
             complexity: displayedMeals[index].complexity,
-            removeItem: _removeMeal,
           );
         },
         itemCount: displayedMeals.length,
