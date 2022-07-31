@@ -6,6 +6,8 @@ import './screens/meal_detail_screen.dart';
 import './screens/category_meals_screen.dart';
 import './screens/filters_screen.dart';
 import './models/meal.dart';
+import 'package:provider/provider.dart';
+import './models/favoriti.dart';
 
 void main() => runApp(MyApp());
 
@@ -46,7 +48,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _toggleFavorite(String mealId) {
+  /* void _toggleFavorite(String mealId) {
     final existingIndex =
         _favoriteMeals.indexWhere((meal) => meal.id == mealId);
     if (existingIndex >= 0) {
@@ -60,47 +62,49 @@ class _MyAppState extends State<MyApp> {
         );
       });
     }
-  }
+  } */
 
-  bool _isMealFavorite(String id) {
+  /*  bool _isMealFavorite(String id) {
     return _favoriteMeals.any((meal) => meal.id == id);
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'DeliMeals',
-      theme: ThemeData(
-        //primarySwatch: Colors.pink,
-        colorScheme: ColorScheme.fromSwatch(
-          accentColor: Colors.amber,
-          primarySwatch: Colors.pink,
-        ),
-        canvasColor: Color.fromRGBO(255, 254, 229, 1),
-        fontFamily: 'Raleway',
-        textTheme: ThemeData.light().textTheme.copyWith(
-            headline6: TextStyle(
-              color: Color.fromRGBO(20, 51, 51, 1),
+    return ChangeNotifierProvider<Favoriti>(
+        create: (_) => Favoriti(DUMMY_MEALS),
+        child: MaterialApp(
+          title: 'DeliMeals',
+          theme: ThemeData(
+            //primarySwatch: Colors.pink,
+            colorScheme: ColorScheme.fromSwatch(
+              accentColor: Colors.amber,
+              primarySwatch: Colors.pink,
             ),
-            headline4: TextStyle(
-              color: Color.fromRGBO(20, 51, 51, 1),
-            ),
-            bodyText1: TextStyle(
-              fontSize: 20,
-              fontFamily: 'RobotoCondensed',
-              fontWeight: FontWeight.bold,
-            )),
-      ),
-      //home: CategoriesScreen(),
-      initialRoute: '/', // default is '/'
-      routes: {
-        '/': (ctx) => TabsScreen(_favoriteMeals),
-        CategoryMealsScreen.routeName: (ctx) =>
-            CategoryMealsScreen(_availableMeals),
-        MealDetailScreen.routeName: (ctx) =>
-            MealDetailScreen(_toggleFavorite, _isMealFavorite),
-        FiltersScreen.routeName: (ctx) => FiltersScreen(_filters, _setFilters),
-      },
-    );
+            canvasColor: Color.fromRGBO(255, 254, 229, 1),
+            fontFamily: 'Raleway',
+            textTheme: ThemeData.light().textTheme.copyWith(
+                headline6: TextStyle(
+                  color: Color.fromRGBO(20, 51, 51, 1),
+                ),
+                headline4: TextStyle(
+                  color: Color.fromRGBO(20, 51, 51, 1),
+                ),
+                bodyText1: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'RobotoCondensed',
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+          //home: CategoriesScreen(),
+          initialRoute: '/', // default is '/'
+          routes: {
+            '/': (ctx) => TabsScreen(),
+            CategoryMealsScreen.routeName: (ctx) =>
+                CategoryMealsScreen(_availableMeals),
+            MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
+            FiltersScreen.routeName: (ctx) =>
+                FiltersScreen(_filters, _setFilters),
+          },
+        ));
   }
 }

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../dummy_data.dart';
+import '../models/favoriti.dart';
 
 class MealDetailScreen extends StatelessWidget {
   static const routeName = '/meal-detail';
 
-  final Function toggleFavorite;
-  final Function isFavorite;
-
-  MealDetailScreen(this.toggleFavorite, this.isFavorite);
+  MealDetailScreen();
 
   Widget buildSectionTitle(BuildContext context, String text) {
     return Container(
@@ -93,10 +92,12 @@ class MealDetailScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(
-          isFavorite(mealId) ? Icons.star : Icons.star_border,
+          context.watch<Favoriti>().isMealFavorite(mealId)
+              ? Icons.star
+              : Icons.star_border,
         ),
         onPressed: () {
-          toggleFavorite(mealId);
+          context.read<Favoriti>().toggleFavorite(mealId);
         },
       ),
     );
