@@ -1,110 +1,81 @@
+// Copyright 2019 The Flutter team. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import './dummy_data.dart';
-import './screens/tabs_screen.dart';
-import './screens/meal_detail_screen.dart';
-import './screens/category_meals_screen.dart';
-import './screens/filters_screen.dart';
-import './models/meal.dart';
 import 'package:provider/provider.dart';
-import './models/favoriti.dart';
+import 'package:provider_shopper/common/theme.dart';
+import 'package:provider_shopper/models/cart.dart';
+import 'package:provider_shopper/models/catalog.dart';
+import 'package:provider_shopper/screens/cart.dart';
+import 'package:provider_shopper/screens/catalog.dart';
+import 'package:provider_shopper/screens/login.dart';
+import 'package:window_size/window_size.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatefulWidget {
-  @override
-  State<MyApp> createState() => _MyAppState();
+void main() {
+  setupWindow();
+  runApp(const MyApp());
 }
 
-class _MyAppState extends State<MyApp> {
-  Map<String, bool> _filters = {
-    'gluten': false,
-    'lactose': false,
-    'vegan': false,
-    'vegetarian': false,
-  };
-  List<Meal> _availableMeals = DUMMY_MEALS;
-  List<Meal> _favoriteMeals = [];
+const double windowWidth = 400;
+const double windowHeight = 800;
 
-  void _setFilters(Map<String, bool> filterData) {
-    setState(() {
-      _filters = filterData;
-
-      _availableMeals = DUMMY_MEALS.where((meal) {
-        if (_filters['gluten'] && !meal.isGlutenFree) {
-          return false;
-        }
-        if (_filters['lactose'] && !meal.isLactoseFree) {
-          return false;
-        }
-        if (_filters['vegan'] && !meal.isVegan) {
-          return false;
-        }
-        if (_filters['vegetarian'] && !meal.isVegetarian) {
-          return false;
-        }
-        return true;
-      }).toList();
+void setupWindow() {
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    WidgetsFlutterBinding.ensureInitialized();
+    setWindowTitle('Provider Demo');
+    setWindowMinSize(const Size(windowWidth, windowHeight));
+    setWindowMaxSize(const Size(windowWidth, windowHeight));
+    getCurrentScreen().then((screen) {
+      setWindowFrame(Rect.fromCenter(
+        center: screen!.frame.center,
+        width: windowWidth,
+        height: windowHeight,
+      ));
     });
   }
+}
 
-  /* void _toggleFavorite(String mealId) {
-    final existingIndex =
-        _favoriteMeals.indexWhere((meal) => meal.id == mealId);
-    if (existingIndex >= 0) {
-      setState(() {
-        _favoriteMeals.removeAt(existingIndex);
-      });
-    } else {
-      setState(() {
-        _favoriteMeals.add(
-          DUMMY_MEALS.firstWhere((meal) => meal.id == mealId),
-        );
-      });
-    }
-  } */
-
-  /*  bool _isMealFavorite(String id) {
-    return _favoriteMeals.any((meal) => meal.id == id);
-  } */
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Favoriti>(
-        create: (_) => Favoriti(DUMMY_MEALS),
-        child: MaterialApp(
-          title: 'DeliMeals',
-          theme: ThemeData(
-            //primarySwatch: Colors.pink,
-            colorScheme: ColorScheme.fromSwatch(
-              accentColor: Colors.amber,
-              primarySwatch: Colors.pink,
-            ),
-            canvasColor: Color.fromRGBO(255, 254, 229, 1),
-            fontFamily: 'Raleway',
-            textTheme: ThemeData.light().textTheme.copyWith(
-                headline6: TextStyle(
-                  color: Color.fromRGBO(20, 51, 51, 1),
-                ),
-                headline4: TextStyle(
-                  color: Color.fromRGBO(20, 51, 51, 1),
-                ),
-                bodyText1: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'RobotoCondensed',
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
-          //home: CategoriesScreen(),
-          initialRoute: '/', // default is '/'
-          routes: {
-            '/': (ctx) => TabsScreen(),
-            CategoryMealsScreen.routeName: (ctx) =>
-                CategoryMealsScreen(_availableMeals),
-            MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
-            FiltersScreen.routeName: (ctx) =>
-                FiltersScreen(_filters, _setFilters),
+    // Using MultiProvider is convenient when providing multiple objects.
+    CatalogModel cat = CatalogModel();
+    return MultiProvider(
+      providers: [
+        // In this sample app, CatalogModel never changes, so a simple Provider
+        // is sufficient.
+        //Provider(create: (context) => CatalogModel()),
+        // CartModel is implemented as a ChangeNotifier, which calls for the use
+        // of ChangeNotifierProvider. Moreover, CartModel depends
+        // on CatalogModel, so a ProxyProvider is needed.
+        /* ChangeNotifierProxyProvider<CatalogModel, CartModel>(
+          create: (context) => CartModel(),
+          update: (context, catalog, cart) {
+            if (cart == null) throw ArgumentError.notNull('cart');
+            cart.catalog = catalog;
+            return cart;
           },
-        ));
+        ) */
+
+        ChangeNotifierProvider(create: (context) => CatalogModel()),
+        ChangeNotifierProvider<CartModel>(create: (context) => CartModel(cat)),
+      ],
+      child: MaterialApp(
+        title: 'Provider Demo',
+        theme: appTheme,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const MyLogin(),
+          '/catalog': (context) => const MyCatalog(),
+          '/cart': (context) => const MyCart(),
+        },
+      ),
+    );
   }
 }
