@@ -1,81 +1,180 @@
-// Copyright 2019 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:provider_shopper/common/theme.dart';
-import 'package:provider_shopper/models/cart.dart';
-import 'package:provider_shopper/models/catalog.dart';
-import 'package:provider_shopper/screens/cart.dart';
-import 'package:provider_shopper/screens/catalog.dart';
-import 'package:provider_shopper/screens/login.dart';
-import 'package:window_size/window_size.dart';
+
+typedef foo = void Function();
+
+class Conteggio {
+  int conto = 0;
+}
+
+class CountState extends InheritedWidget {
+  //final int? count;
+  final Conteggio? count;
+  final Widget child;
+  final foo addCounter;
+  final foo removeCounter;
+
+  const CountState(
+      {Key? key,
+      this.count,
+      required this.child,
+      required this.addCounter,
+      required this.removeCounter})
+      : super(key: key, child: child);
+
+  static CountState of(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<CountState>()!);
+    //return (context.findAncestorWidgetOfExactType<CountState>()!);
+  }
+
+  @override
+  bool updateShouldNotify(CountState oldWidget) {
+    return true;
+    //return count!.conto != oldWidget.count!.conto;
+  }
+}
 
 void main() {
-  setupWindow();
   runApp(const MyApp());
 }
 
-const double windowWidth = 400;
-const double windowHeight = 800;
+class RootWidget extends StatefulWidget {
+  @override
+  RootWidgetState createState() => RootWidgetState();
+}
 
-void setupWindow() {
-  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-    WidgetsFlutterBinding.ensureInitialized();
-    setWindowTitle('Provider Demo');
-    setWindowMinSize(const Size(windowWidth, windowHeight));
-    setWindowMaxSize(const Size(windowWidth, windowHeight));
-    getCurrentScreen().then((screen) {
-      setWindowFrame(Rect.fromCenter(
-        center: screen!.frame.center,
-        width: windowWidth,
-        height: windowHeight,
-      ));
+class RootWidgetState extends State<RootWidget> {
+  Conteggio count = Conteggio();
+  void addCounter() {
+    setState(() {
+      count.conto++;
     });
+  }
+
+  void removeCounter() {
+    setState(() {
+      if (count.conto > 0) {
+        count.conto--;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CountState(
+      count: count,
+      addCounter: addCounter,
+      removeCounter: removeCounter,
+      child: const InheritedWidgetDemo(),
+    );
+  }
+}
+
+class InheritedWidgetDemo extends StatelessWidget {
+  const InheritedWidgetDemo({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    //final counterState = CountState.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: const Text(
+          'Counter Inherited Widget Demo',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Testo1()
+            /* Text(
+              'Items add & remove: ${CountState.of(context).count}',
+              style: const TextStyle(fontSize: 20),
+            ) */
+            ,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: FloatingActionButton(
+                    onPressed: CountState.of(context).removeCounter,
+                    child: const Icon(
+                      Icons.remove,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FloatingActionButton(
+                    //onPressed: CountState.of(context).addCounter,
+                    onPressed: CountState.of(context).addCounter,
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FloatingActionButton(
+                    //onPressed: CountState.of(context).addCounter,
+                    onPressed: () {
+                      CountState.of(context).count!.conto++;
+                    },
+                    child: const Icon(
+                      Icons.access_alarm,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: RootWidget(),
+    );
+  }
+}
+
+class Testo1 extends StatelessWidget {
+  Testo1({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Using MultiProvider is convenient when providing multiple objects.
-    CatalogModel cat = CatalogModel();
-    return MultiProvider(
-      providers: [
-        // In this sample app, CatalogModel never changes, so a simple Provider
-        // is sufficient.
-        //Provider(create: (context) => CatalogModel()),
-        // CartModel is implemented as a ChangeNotifier, which calls for the use
-        // of ChangeNotifierProvider. Moreover, CartModel depends
-        // on CatalogModel, so a ProxyProvider is needed.
-        /* ChangeNotifierProxyProvider<CatalogModel, CartModel>(
-          create: (context) => CartModel(),
-          update: (context, catalog, cart) {
-            if (cart == null) throw ArgumentError.notNull('cart');
-            cart.catalog = catalog;
-            return cart;
-          },
-        ) */
-
-        ChangeNotifierProvider(create: (context) => CatalogModel()),
-        ChangeNotifierProvider<CartModel>(create: (context) => CartModel(cat)),
-      ],
-      child: MaterialApp(
-        title: 'Provider Demo',
-        theme: appTheme,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const MyLogin(),
-          '/catalog': (context) => const MyCatalog(),
-          '/cart': (context) => const MyCart(),
-        },
-      ),
+    print('testo1');
+    return Text(
+      'Items add & remove: ${CountState.of(context).count!.conto}',
+      //'Items add & remove:33',
+      style: const TextStyle(fontSize: 20),
     );
   }
 }

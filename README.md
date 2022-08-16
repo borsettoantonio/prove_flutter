@@ -1,58 +1,17 @@
-# provider_shopper
+# InheritedWidget
 
-A Flutter sample app that shows a state management approach using the [Provider][] package.
-This is the app discussed in the [Simple app state management][simple] section of
-[flutter.dev][].
-
-![An animated gif of the app in action](https://camo.githubusercontent.com/cf301d68c65279a074aa3334ef7fff548f87c0e2/68747470733a2f2f666c75747465722e6465762f6173736574732f646576656c6f706d656e742f646174612d616e642d6261636b656e642f73746174652d6d676d742f6d6f64656c2d73686f707065722d73637265656e636173742d653061646130653833636438653766646361643834313637623866376666643765623565663835623063623839353766303363366630356264313662316365612e676966)
-
-[Provider]: https://pub.dev/packages/provider
-[simple]: https://flutter.dev/docs/development/data-and-backend/state-mgmt/simple
-[flutter.dev]: https://flutter.dev/
-
-Nella funzione setupWindow() le dimensioni della finestra se si compila per Windows desktop.
-Viene usata la CustomScrollView, che permette di avere dei figli di tipo sliver, come la SliverAppBar o la SliverList, che danno un look un po' diverso alla pagina.
-Viene anche usato ScaffoldMessenger.of(context).showSnackBar(...) per visualizzare dei messaggi.
-
-## Goals for this sample
-
-* Show simple use of `Provider` for providing an immutable value to a subtree
-* Illustrate a simple state management approach using the ChangeNotifier class
-* Show use of `ProxyProvider` for provided objects that depend on other provided objects
-
-## The important bits
-
-### `lib/main.dart`
-
-Here the app sets up objects it needs to track state: a catalog and a shopping cart. It builds
-a `MultiProvider` to provide both objects at once to widgets further down the tree.
-
-The `CartModel` instance is provided using a `ChangeNotifierProxyProvider`, which combines
-two types of functionality:
-
-1. It will automatically subscribe to changes in `CartModel` (if you only want this functionality
-   simply use `ChangeNotifierProvider`).
-2. It takes the value of a previously provided object (in this case, `CatalogModel`, provided
-   just above), and uses it to build the value of `CartModel` (if you only want
-   _this_ functionality, simply use `ProxyProvider`).
-
-### `lib/models/*`
-
-This directory contains the model classes that are provided in `main.dart`. These classes
-represent the app state.
-
-### `lib/screens/*`
-
-This directory contains widgets used to construct the two screens of the app: the catalog and
-the cart. These widgets have access to the current state of both the catalog and the cart
-via `Provider.of`.
-
-## Questions/issues
-
-If you have a general question about Provider, the best places to go are:
-
-* [Provider documentation](https://pub.dev/documentation/provider/latest/)
-* [StackOverflow](https://stackoverflow.com/questions/tagged/flutter)
-
-If you run into an issue with the sample itself, please file an issue
-in the [main Flutter repo](https://github.com/flutter/flutter/issues).
+Dopo molti giorni e molti sforzi ho (forse) capito come funziona InheritedWidget.
+Ci sono vari modi per utilizzarlo: vediamone alcuni.
+Una possibilità è quella di mettere a disposizione di tutto il programma dei dati immutabili.
+In questo caso, quando sono disponibili questi dati, si crea il widget (che eredita da InheritedWidget) e quindi si crea un metodo statico of, che permette di recuperare il widget stesso ( o una sua parte).
+Si possono usare i metodi findAncestorWidgetOfExactType oppure dependOnInheritedWidgetOfExactType, tenendo presente che il primo non propaga eventuali cambiamenti sulla UI.
+Un’altra possibilità è quella di mettere a disposizione di tutto il programma un metodo che possa accedere agli elementi un certo widget. In tal caso si crea il widget da ereditare nel widget con gli elementi cui si vuole accedere, passando un metodo che accede a questi elementi.
+Un’altra possibilità è quella di usare la dependance injection, ossia mettere nel widget da ereditare una classe che implementi una certa classe astratta, in modo che qualsiasi parte del programma possa usarla.
+A seconda della classe concreta con cui si crea il widget viene quindi iniettato nel programma un comportamento diverso.
+Qualora si voglia poter modificare il data contenuto nel widget da ereditare, si deve creare un widget con stato (chiamiamolo A) che contenga i dati da condividere e modificare. Nel suo metodo build si crea il widget da ereditare (chiamiamolo B),  cui si passano i dati da condividere, e come child il widget che racchiude il resto dell’albero che può accedere a questi dati. Al widget B si passano anche i metodi che permettono di modificare i dati dentro ad A. In questi metodi si usa setstate() per far si che il widget A sia ricostruito. Questo provoca che venga ricostruito anche il widget B, ma con i nuovi dati.
+Ora se il widget child di B è const, non verrà ricostruito quando viene ricreato B, e quindi le modifiche non si propagano al child.
+ Però se nel metodo of di accesso a B si usa il metodo dependOnInheritedWidgetOfExactType succede che i widget che hanno fatto accesso a B vengono comunque ricreati, quindi con i nuovi dati di B.
+Quindi invece di ricreare un intero albero conviene usare questo metodo. Nel metodo updateShouldNotify si può decidere se il nuovo valore di B è diverso dal precedente e quindi se è il caso di ricostruire i widget dipendenti.
+Volendo è anche possibile evitare di ricreare i dati  da passare al widget da ereditare ad ogni modifica dei dati. Per fare questo il widget da ereditare deve contenere un riferimento ad un oggetto, che a sua volta contiene i dati.
+In questo modo il widget da ereditare viene ricreato ma non i dati da passare, e i dati che referenzia possono cambiare.
+Questi dati vanno quindi creati una sola volta, possono quindi essere modificati. L’unico problema di questo approccio è che updateShouldNotify non vede la creazione di un oggetto diverso, quindi per aggiornare i widget dipendenti deve sempre ritornare true.
