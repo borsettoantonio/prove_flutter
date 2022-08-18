@@ -1,4 +1,4 @@
-package dev.flutter.provider_shopper
+package com.example.app3
 
 import io.flutter.embedding.android.FlutterActivity
 
