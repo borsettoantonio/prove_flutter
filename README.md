@@ -1,8 +1,7 @@
-# Corso Flutter & Dart Lezione 08 - 16
+# Corso Flutter & Dart Lezione 08 - Finale
 
-Esempio di utilizzo del package Provider.
-Uso del costruttore ChangeNotifierProvider.value()
-Uso di PopupMenuButton()
-Uso di provider nidificati dentro al builder di una GridView
-Uso di GridTile con GestureDetector, e footer con GridTileBar su cui inserire
-testo e icone.
+Gestione dello stato con il package Provider.
+In cart.dart si utilizzano due interessanti metodi di Map: Map.update(), Map.putIfAbsent().
+Spacer e Chip sono usati in cart_screen.dart.
+Dismissible widget in cart_item.dart.
+
