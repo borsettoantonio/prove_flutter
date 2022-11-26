@@ -1,7 +1,8 @@
-# Corso Flutter & Dart Lezione 08 - Finale
+# Corso Flutter & Dart Lezione 09 - 15
+26.11.2022
 
-Gestione dello stato con il package Provider.
-In cart.dart si utilizzano due interessanti metodi di Map: Map.update(), Map.putIfAbsent().
-Spacer e Chip sono usati in cart_screen.dart.
-Dismissible widget in cart_item.dart.
-
+Aggiunta di snackbar, showDialog function, AlertDialog widget,
+Uso della classe Form e correlati campi di input.
+Uso di FocusNode per spostare il focus sui vari campi.
+Come fare il submit del form.
+Validazione dei dati.
