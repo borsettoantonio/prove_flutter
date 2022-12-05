@@ -5,6 +5,7 @@ class Repository extends ChangeNotifier {
   List<int> _dati = [2, 5, 8, 9];
   int statoThread = 0;
   Asincrono? asin;
+  bool primaVolta=true;
 
   List<int> getDati() {
     return _dati;
@@ -16,8 +17,13 @@ class Repository extends ChangeNotifier {
   }
 
   void lanciaThread() {
-    asin = Asincrono();
+    if(primaVolta)
+   { asin = Asincrono();
     asin?.lanciaThread2(this);
+    primaVolta=false;
+   }
+   else
+   asin!.continua();
   }
 
   void fermaThread() {
