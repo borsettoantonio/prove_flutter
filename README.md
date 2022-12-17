@@ -1,5 +1,11 @@
-# Corso Flutter & Dart Lezione 10 - 12 async - await
-13.12.2022
+# Corso Flutter & Dart Lezione 10 - 18 Operazioni CRUD
+17.12.2022
 
-Modifica della precedente versione sostituendo i metodi
-then e catchError dei Future con async e await.
+Sono implementate le seguenti funzionalità:
+Leggere i dati all'inizio (in due possibili modalità).
+Implementare il Pull-to-Refresh con l'utilizzo del widget RefreshIndicator
+per aggiornare una lista trascinando lo scroll.
+Attenzione !!!  Non funziona in Windows.
+Fare l'aggiornamento dei prodotti.
+Fare la cancellazione dei prodotti.
+Gestire le eccezioni.

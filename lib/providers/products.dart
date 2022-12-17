@@ -1,13 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import './product.dart';
+import '../models/http_exception.dart' as except;
 
 class Products with ChangeNotifier {
-  List<Product> _items = [
-    Product(
+  List<Product> _items = [];
+  /* Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
@@ -39,8 +41,36 @@ class Products with ChangeNotifier {
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
-  ];
+  ]; */
   // var _showFavoritesOnly = false;
+
+  Future<void> fetchAndSetProducts() async {
+    final url = Uri.https(
+        'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
+        'products.json');
+    try {
+      final response = await http.get(url);
+      if (response.body != "null") {
+        final extractedData =
+            json.decode(response.body) as Map<String, dynamic>;
+        final List<Product> loadedProducts = [];
+        extractedData.forEach((prodId, prodData) {
+          loadedProducts.add(Product(
+            id: prodId,
+            title: prodData['title'],
+            description: prodData['description'],
+            price: prodData['price'],
+            isFavorite: prodData['isFavorite'],
+            imageUrl: prodData['imageUrl'],
+          ));
+        });
+        _items = loadedProducts;
+        notifyListeners();
+      }
+    } catch (error) {
+      throw (error);
+    }
+  }
 
   List<Product> get items {
     // if (_showFavoritesOnly) {
@@ -67,9 +97,20 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
+      final url = Uri.https(
+          'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
+          'products/$id.json');
+
+      await http.patch(url,
+          body: json.encode({
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageUrl,
+            'price': newProduct.price
+          }));
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else {
@@ -107,8 +148,20 @@ class Products with ChangeNotifier {
     ;
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url = Uri.https(
+        'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
+        'products/$id.json');
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    Product? existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw except.HttpException('Could not delete product.');
+    }
+    existingProduct = null;
   }
 }
