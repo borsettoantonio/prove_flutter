@@ -1,5 +1,4 @@
-# Corso Flutter & Dart Lezione 10 - 22
+# Corso Flutter & Dart Lezione 10 - 23 FutureBuilder
 24.12.2022
 
-Sono implementate le seguenti funzionalità:
-recupero ordine dal database;
+Esempio di uso di FutureBuilder in orders_scree.dart.
