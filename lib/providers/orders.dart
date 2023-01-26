@@ -19,16 +19,20 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
-  List<OrderItem> _orders = [];
+  List<OrderItem> orders = [];
+  final String authToken;
 
-  List<OrderItem> get orders {
-    return [..._orders];
+  Orders(this.authToken, this.orders);
+
+  List<OrderItem> get ordini {
+    return [...orders];
   }
 
   Future<void> fetchAndSetOrders() async {
     final url = Uri.https(
         'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
-        'orders.json');
+        'orders.json',
+        {'auth': authToken});
     final response = await http.get(url);
     final List<OrderItem> loadedOrders = [];
     final extractedData;
@@ -60,14 +64,15 @@ class Orders with ChangeNotifier {
         ),
       );
     });
-    _orders = loadedOrders.reversed.toList();
+    orders = loadedOrders.reversed.toList();
     notifyListeners();
   }
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final url = Uri.https(
         'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
-        'orders.json');
+        'orders.json',
+        {'auth': authToken});
     final timestamp = DateTime.now();
     final response = await http.post(
       url,
@@ -84,7 +89,7 @@ class Orders with ChangeNotifier {
             .toList(),
       }),
     );
-    _orders.insert(
+    orders.insert(
       0,
       OrderItem(
         id: json.decode(response.body)['name'],

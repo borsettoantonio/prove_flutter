@@ -1,4 +1,10 @@
-# Corso Flutter & Dart Lezione 10 - 23 FutureBuilder
-24.12.2022
+# Corso Flutter & Dart Lezione 11 - 11 Autenticazione dell'utente
+26.01.2023
 
-Esempio di uso di FutureBuilder in orders_scree.dart.
+Ho inserito in main.dart il ridimensionamento della finestra 
+per app desktop.
+Gestione degli errori di collegamento e autenticazione a firebase.
+Esempio di gestione di ChangeNotifierProxyProvider per gestire il caso
+che un Provider dipenda da un secondo Provider, e per fare in modo
+che se il secondo Privider viene modificato, il primo venga ricostruito.
+

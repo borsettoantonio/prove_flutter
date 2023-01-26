@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import './product.dart';
 import '../models/http_exception.dart' as except;
+import './auth.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [];
@@ -43,10 +44,27 @@ class Products with ChangeNotifier {
   ]; */
   // var _showFavoritesOnly = false;
 
+  String authToken;
+  String userId;
+
+  // Products(this.authToken, this.userId, this._items);
+  /* Products.create()
+      : authToken = '',
+        userId = ''; */
+  //Products.create([this.authToken = '', this.userId = '']);
+
+  Products([this.authToken = '', this.userId = '']);
+
+  void update(Auth auth) {
+    authToken = auth.token!;
+    userId = auth.userId!;
+  }
+
   Future<void> fetchAndSetProducts() async {
     final url = Uri.https(
         'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
-        'products.json');
+        'products.json',
+        {'auth': authToken});
     try {
       final response = await http.get(url);
       if (response.body != "null") {
@@ -101,7 +119,8 @@ class Products with ChangeNotifier {
     if (prodIndex >= 0) {
       final url = Uri.https(
           'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
-          'products/$id.json');
+          'products/$id.json',
+          {'auth': authToken});
 
       await http.patch(url,
           body: json.encode({
@@ -120,7 +139,8 @@ class Products with ChangeNotifier {
   Future<void> addProduct(Product product) async {
     final url = Uri.https(
         'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
-        'products.json');
+        'products.json',
+        {'auth': authToken});
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -150,7 +170,8 @@ class Products with ChangeNotifier {
   Future<void> deleteProduct(String id) async {
     final url = Uri.https(
         'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
-        'products/$id.json');
+        'products/$id.json',
+        {'auth': authToken});
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     Product? existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
