@@ -19,17 +19,16 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  Future<void> toggleFavoriteStatus(String authToken) async {
+  Future<void> toggleFavoriteStatus(String authToken, String userId) async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     final url = Uri.https(
         'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
-        'products/$id.json',
+        'userFavorites/$userId/$id.json',
         {'auth': authToken});
     try {
-      final response =
-          await http.patch(url, body: json.encode({'isFavorite': isFavorite}));
+      final response = await http.put(url, body: json.encode(isFavorite));
       if (response.statusCode >= 400) {
         isFavorite = oldStatus;
         notifyListeners();
