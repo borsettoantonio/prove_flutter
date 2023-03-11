@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/products_grid.dart';
-import '../widgets/badge.dart';
+//import '../widgets/badge.dart';
 import '../providers/cart.dart';
 import './cart_screen.dart';
 import '../widgets/app_drawer.dart';
@@ -80,8 +80,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ),
           Consumer<Cart>(
             builder: (_, cart, ch) => Badge(
+              backgroundColor: Colors.amberAccent,
               child: ch!,
-              value: cart.itemCount.toString(),
+              label: Text(cart.itemCount.toString(),
+            style: TextStyle(color: Colors.blue),
+          ),
             ),
             child: IconButton(
               icon: Icon(
