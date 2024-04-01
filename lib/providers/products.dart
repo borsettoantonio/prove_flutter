@@ -44,8 +44,8 @@ class Products with ChangeNotifier {
   ]; */
   // var _showFavoritesOnly = false;
 
-  String authToken;
-  String userId;
+  String? authToken;
+  String? userId;
 
   // Products(this.authToken, this.userId, this._items);
   /* Products.create()
@@ -56,12 +56,13 @@ class Products with ChangeNotifier {
   Products([this.authToken = '', this.userId = '']);
 
   void update(Auth auth) {
-    authToken = auth.token!;
-    userId = auth.userId!;
+    authToken = auth.token;
+    userId = auth.userId;
   }
 
   Future<void> fetchAndSetProducts() async {
     var url = Uri.https(
+        //'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
         'progetto2-33ec6-default-rtdb.europe-west1.firebasedatabase.app',
         'products.json',
         {'auth': authToken});

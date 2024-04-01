@@ -39,11 +39,12 @@ class UserProductItem extends StatelessWidget {
                       .deleteProduct(id!);
                 } catch (error) {
                   scaffold.showSnackBar(
-                    SnackBar(content: Text('Deleting failed!')),
+                    SnackBar(content: Text('Deleting failed!',textAlign: TextAlign.center,),
+                    ),
                   );
                 }
               },
-              color: Theme.of(context).errorColor,
+              color: Theme.of(context).colorScheme.error,
             ),
           ],
         ),

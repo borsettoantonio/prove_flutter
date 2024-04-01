@@ -97,7 +97,7 @@ class _OrderButtonState extends State<OrderButton> {
               widget.cart.clear();
             },
       style: TextButton.styleFrom(
-        primary: Theme.of(context).primaryColor,
+        foregroundColor: Theme.of(context).primaryColor,
       ),
     );
   }
